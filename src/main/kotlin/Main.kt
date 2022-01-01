@@ -16,12 +16,9 @@ fun main(args: Array<String>) {
             val r = i / (width).toDouble()
             val g = j / (height).toDouble()
             val b = 0.25
+            val colour = Vec3(r, g, b)
 
-            val ir = (256f * r).toInt()
-            val ig = (256f * g).toInt()
-            val ib = (256f * b).toInt()
-
-            f.write("$ir $ig $ib\n")
+            writeColour(f, colour)
         }
     }
 
