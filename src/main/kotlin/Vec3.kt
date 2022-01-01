@@ -108,3 +108,5 @@ class Vec3(x: Double, y: Double, z: Double) {
 operator fun Double.times(o: Vec3): Vec3 {
     return Vec3(o.x * this, o.y * this, o.z * this)
 }
+
+typealias Colour = Vec3
