@@ -6,7 +6,7 @@ class Sphere(val center: Vec3, val radius: Double) : Hittable() {
         val oc = ray.origin - center
         val a = ray.direction.sqrMag()
         val halfB = Vec3.dot(oc, ray.direction)
-        val c = oc.sqrMag() - radius
+        val c = oc.sqrMag() - radius * radius
 
         val discriminant = halfB * halfB - a * c
         if (discriminant < 0) {
