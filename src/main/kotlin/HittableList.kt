@@ -14,12 +14,12 @@ class HittableList() : Hittable() {
         objs.clear()
     }
 
-    override fun hit(r: Ray, min: Double, max: Double): Hit? {
+    override fun hit(ray: Ray, min: Double, max: Double): Hit? {
         var closest = max
         var bestHit: Hit? = null
 
         for (obj in objs) {
-            val hit = obj.hit(r, min, closest)
+            val hit = obj.hit(ray, min, closest)
             if (hit != null) {
                 closest = hit.t
                 bestHit = hit

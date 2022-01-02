@@ -6,5 +6,5 @@ class Hit(val p: Vec3, val t: Double, r: Ray, outwardNormal: Vec3) {
 }
 
 abstract class Hittable {
-    abstract fun hit(r: Ray, min: Double, max: Double): Hit?
+    abstract fun hit(ray: Ray, min: Double, max: Double): Hit?
 }
