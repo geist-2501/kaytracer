@@ -1,27 +1,15 @@
 import java.io.File
 import kotlin.math.sqrt
 
-fun rayColour(r: Ray): Colour {
-    var t = hitSphere(Vec3(0, 0, -1), 0.5, r)
-    if (t > 0.0) {
-        val n = (r.at(t) - Vec3(0, 0, -1)).unit()
-        return 0.5 * Colour(n.x + 1, n.y + 1, n.z + 1)
+fun rayColour(r: Ray, world: Hittable): Colour {
+    val hit = world.hit(r, 0.0, Double.POSITIVE_INFINITY)
+    if (hit != null) {
+        return 0.5 * (hit.normal + Colour(1, 1, 1))
     }
 
     val unitDir = r.direction.unit()
-    t = 0.5 * (unitDir.y + 1.0)
+    val t = 0.5 * (unitDir.y + 1.0)
     return (1.0 - t) * Colour(1, 1, 1) + t * Colour(0.5, 0.7, 1.0)
-}
-
-fun hitSphere(center: Vec3, radius: Double, r: Ray): Double {
-
-    val oc = r.origin - center
-    val a = r.direction.sqrMag()
-    val halfB = Vec3.dot(oc, r.direction)
-    val c = Vec3.dot(oc, oc) - radius * radius
-    val discriminant = halfB*halfB - a * c
-
-    return if (discriminant < 0) -1.0 else (-halfB - sqrt(discriminant)) / a
 }
 
 fun main(args: Array<String>) {
@@ -33,6 +21,12 @@ fun main(args: Array<String>) {
     val aspect = 16.0 / 9.0
     val width = 400
     val height = (width / aspect).toInt()
+
+    // World.
+
+    val world = HittableList()
+    world.add(Sphere(Vec3(0, 0, -1), 0.5))
+    world.add(Sphere(Vec3(0.0, -100.5, -1.0), 100.0))
 
     // Camera.
 
@@ -56,7 +50,7 @@ fun main(args: Array<String>) {
             val u = i.toDouble() / (width - 1)
             val v = j.toDouble() / (height - 1)
             val r = Ray(origin, lowerLeftCorner + u * horizontal + v * vertical - origin)
-            val colour = rayColour(r)
+            val colour = rayColour(r, world)
 
             writeColour(f, colour)
         }
