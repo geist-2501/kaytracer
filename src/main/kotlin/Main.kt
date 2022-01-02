@@ -21,6 +21,7 @@ fun main(args: Array<String>) {
     val aspect = 16.0 / 9.0
     val width = 400
     val height = (width / aspect).toInt()
+    val samplesPerPixel = 100
 
     // World.
 
@@ -30,14 +31,7 @@ fun main(args: Array<String>) {
 
     // Camera.
 
-    val viewportHeight = 2.0
-    val viewportWidth = viewportHeight * aspect
-    val focalLength = 1.0
-
-    val origin = Vec3()
-    val horizontal = Vec3(viewportWidth, 0.0, 0.0)
-    val vertical = Vec3(0.0, viewportHeight, 0.0)
-    val lowerLeftCorner = origin - horizontal / 2.0 - vertical / 2.0 - Vec3(0.0, 0.0, focalLength)
+    val camera = Camera()
 
     // Render.
 
@@ -47,12 +41,16 @@ fun main(args: Array<String>) {
 
     for (j in height - 1 downTo 0) {
         for (i in 0 until width) {
-            val u = i.toDouble() / (width - 1)
-            val v = j.toDouble() / (height - 1)
-            val r = Ray(origin, lowerLeftCorner + u * horizontal + v * vertical - origin)
-            val colour = rayColour(r, world)
+            val colour = Colour()
+            for (s in 0 until samplesPerPixel) {
+                val u = (i + randomNum()) / (width - 1)
+                val v = (j + randomNum()) / (height - 1)
+                val r = camera.getRay(u, v)
 
-            writeColour(f, colour)
+                colour += rayColour(r, world)
+            }
+
+            writeColour(f, colour, samplesPerPixel)
         }
     }
 
