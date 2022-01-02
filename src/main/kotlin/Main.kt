@@ -16,16 +16,12 @@ fun rayColour(r: Ray): Colour {
 fun hitSphere(center: Vec3, radius: Double, r: Ray): Double {
 
     val oc = r.origin - center
-    val a = Vec3.dot(r.direction, r.direction)
-    val b = 2.0 * Vec3.dot(oc, r.direction)
+    val a = r.direction.sqrMag()
+    val halfB = Vec3.dot(oc, r.direction)
     val c = Vec3.dot(oc, oc) - radius * radius
-    val discriminant = b*b - 4 * a * c
+    val discriminant = halfB*halfB - a * c
 
-    return if (discriminant < 0) {
-        -1.0
-    } else {
-        (-b - sqrt(discriminant)) / (2.0 * a)
-    }
+    return if (discriminant < 0) -1.0 else (-halfB - sqrt(discriminant)) / a
 }
 
 fun main(args: Array<String>) {
