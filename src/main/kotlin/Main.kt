@@ -1,10 +1,15 @@
 import java.io.File
-import kotlin.math.sqrt
 
-fun rayColour(r: Ray, world: Hittable): Colour {
-    val hit = world.hit(r, 0.0, Double.POSITIVE_INFINITY)
+fun rayColour(r: Ray, world: Hittable, depth: Int): Colour {
+    if (depth <= 0) {
+        return Colour(0, 0, 0)
+    }
+
+    val hit = world.hit(r, 0.001, Double.POSITIVE_INFINITY)
     if (hit != null) {
-        return 0.5 * (hit.normal + Colour(1, 1, 1))
+        val target = hit.p + hit.normal + Vec3.randomUnitVector()
+        val bounce = Ray(hit.p, target - hit.p)
+        return 0.5 * rayColour(bounce, world, depth - 1)
     }
 
     val unitDir = r.direction.unit()
@@ -22,6 +27,7 @@ fun main(args: Array<String>) {
     val width = 400
     val height = (width / aspect).toInt()
     val samplesPerPixel = 100
+    val maxBounces = 50
 
     // World.
 
@@ -37,7 +43,9 @@ fun main(args: Array<String>) {
 
     f.write("P3\n")
     f.write("$width $height\n")
-    f.write("256\n")
+    f.write("255\n")
+
+    println("Beginning render...")
 
     for (j in height - 1 downTo 0) {
         for (i in 0 until width) {
@@ -47,12 +55,16 @@ fun main(args: Array<String>) {
                 val v = (j + randomNum()) / (height - 1)
                 val r = camera.getRay(u, v)
 
-                colour += rayColour(r, world)
+                colour += rayColour(r, world, maxBounces)
             }
 
             writeColour(f, colour, samplesPerPixel)
         }
+
+        if (j % 20 == 0) print("#")
     }
+
+    println()
 
     f.close()
 

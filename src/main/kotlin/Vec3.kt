@@ -83,6 +83,26 @@ class Vec3(x: Double, y: Double, z: Double) {
                 a.x * b.y - a.y * b.x
             )
         }
+
+        fun random(): Vec3 {
+            return Vec3(randomNum(), randomNum(), randomNum())
+        }
+
+        fun random(min: Double, max: Double): Vec3 {
+            return Vec3(randomNum(min, max), randomNum(min, max), randomNum(min, max))
+        }
+
+        fun randomInUnitSphere(): Vec3 {
+            while (true) {
+                val v = random(-1.0, 1.0)
+                if (v.sqrMag() >= 1.0) continue
+                return v
+            }
+        }
+
+        fun randomUnitVector(): Vec3 {
+            return randomInUnitSphere().unit()
+        }
     }
 
     override fun toString(): String {
