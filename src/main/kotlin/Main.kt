@@ -7,10 +7,12 @@ fun rayColour(r: Ray, world: Hittable, depth: Int): Colour {
 
     val hit = world.hit(r, 0.001, Double.POSITIVE_INFINITY)
     if (hit != null) {
-        val target = hit.p + hit.normal + Vec3.randomUnitVector()
-//        val target = hit.p + Vec3.randomInHemisphere(hit.normal)
-        val bounce = Ray(hit.p, target - hit.p)
-        return 0.5 * rayColour(bounce, world, depth - 1)
+        val scatter = hit.material.scatter(r, hit)
+        if (scatter != null) {
+            return scatter.attenuation * rayColour(scatter.scattered, world, depth - 1)
+        }
+
+        return Colour(0, 0, 0)
     }
 
     val unitDir = r.direction.unit()
@@ -32,9 +34,16 @@ fun main(args: Array<String>) {
 
     // World.
 
+    val matGround = Lambertian(Colour(0.8, 0.8, 0.0))
+    val matCenter = Lambertian(Colour(0.7, 0.3, 0.3))
+    val matLeft = Metal(Colour(0.8, 0.8, 0.8), 0.1)
+    val matRight = Metal(Colour(0.8, 0.6, 0.2), 1.0)
+
     val world = HittableList()
-    world.add(Sphere(Vec3(0, 0, -1), 0.5))
-    world.add(Sphere(Vec3(0.0, -100.5, -1.0), 100.0))
+    world.add(Sphere(Vec3(0.0, -100.5, -1.0), 100.0, matGround))
+    world.add(Sphere(Vec3(0, 0, -1), 0.5, matCenter))
+    world.add(Sphere(Vec3(-1, 0, -1), 0.5, matLeft))
+    world.add(Sphere(Vec3(1, 0, -1), 0.5, matRight))
 
     // Camera.
 

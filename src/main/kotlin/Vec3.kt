@@ -1,3 +1,4 @@
+import kotlin.math.abs
 import kotlin.math.sqrt
 
 class Vec3(x: Double, y: Double, z: Double) {
@@ -71,6 +72,11 @@ class Vec3(x: Double, y: Double, z: Double) {
         return this / mag()
     }
 
+    fun isNearZero(): Boolean {
+        val s = 1e-8
+        return (abs(x) < s) && (abs(y) < s) && (abs(z) < s)
+    }
+
     companion object {
         fun dot(a: Vec3, b: Vec3): Double {
             return a.x * b.x + a.y * b.y + a.z * b.z
@@ -107,6 +113,10 @@ class Vec3(x: Double, y: Double, z: Double) {
         fun randomInHemisphere(normal: Vec3): Vec3 {
             val inSphere = randomInUnitSphere()
             return if (dot(inSphere, normal) > 0.0) inSphere else -inSphere
+        }
+
+        fun reflect(v: Vec3, n: Vec3): Vec3 {
+            return v - 2.0 * dot(v, n) * n
         }
     }
 
