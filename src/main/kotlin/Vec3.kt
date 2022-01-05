@@ -103,6 +103,11 @@ class Vec3(x: Double, y: Double, z: Double) {
         fun randomUnitVector(): Vec3 {
             return randomInUnitSphere().unit()
         }
+
+        fun randomInHemisphere(normal: Vec3): Vec3 {
+            val inSphere = randomInUnitSphere()
+            return if (dot(inSphere, normal) > 0.0) inSphere else -inSphere
+        }
     }
 
     override fun toString(): String {

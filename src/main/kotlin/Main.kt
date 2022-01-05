@@ -8,6 +8,7 @@ fun rayColour(r: Ray, world: Hittable, depth: Int): Colour {
     val hit = world.hit(r, 0.001, Double.POSITIVE_INFINITY)
     if (hit != null) {
         val target = hit.p + hit.normal + Vec3.randomUnitVector()
+//        val target = hit.p + Vec3.randomInHemisphere(hit.normal)
         val bounce = Ray(hit.p, target - hit.p)
         return 0.5 * rayColour(bounce, world, depth - 1)
     }
