@@ -35,7 +35,7 @@ fun main(args: Array<String>) {
     // World.
 
     val matGround = Lambertian(Colour(0.8, 0.8, 0.0))
-    val matCenter = Lambertian(Colour(0.7, 0.3, 0.3))
+    val matCenter = Dielectric(1.5)
     val matLeft = Metal(Colour(0.8, 0.8, 0.8), 0.1)
     val matRight = Metal(Colour(0.8, 0.6, 0.2), 1.0)
 

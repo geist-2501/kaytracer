@@ -1,4 +1,5 @@
 import kotlin.math.abs
+import kotlin.math.min
 import kotlin.math.sqrt
 
 class Vec3(x: Double, y: Double, z: Double) {
@@ -117,6 +118,13 @@ class Vec3(x: Double, y: Double, z: Double) {
 
         fun reflect(v: Vec3, n: Vec3): Vec3 {
             return v - 2.0 * dot(v, n) * n
+        }
+
+        fun refract(uv: Vec3, n: Vec3, etaiOverEtat: Double): Vec3 {
+            val cosTheta = min(dot(-uv, n), 1.0)
+            val rOutPerp = etaiOverEtat * (uv + cosTheta * n)
+            val rOutPara = -sqrt(abs(1.0 - rOutPerp.sqrMag())) * n
+            return rOutPerp + rOutPara
         }
     }
 
