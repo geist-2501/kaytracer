@@ -1,24 +1,30 @@
-class Camera {
+import kotlin.math.tan
 
-    val origin: Vec3
-    val uvOrigin: Vec3
-    val horizontal: Vec3
-    val vertical: Vec3
+class Camera(lookFrom: Vec3, lookAt: Vec3, vup: Vec3, vfov: Double, aspect: Double) {
+
+    private val origin: Vec3
+    private val uvOrigin: Vec3
+    private val horizontal: Vec3
+    private val vertical: Vec3
 
     init {
-        val aspect = 16.0 / 9.0
-        val height = 2.0
+        val theta = Math.toRadians(vfov)
+        val h = tan(theta / 2)
+        val height = 2.0 * h
         val width = aspect * height
-        val focalLength = 1.0
 
-        origin = Vec3()
-        horizontal = Vec3(width, 0.0, 0.0)
-        vertical = Vec3(0.0, height, 0.0)
-        uvOrigin = origin - horizontal / 2.0 - vertical / 2.0 - Vec3(0.0, 0.0, focalLength)
+        val w = (lookFrom - lookAt).unit()
+        val u = Vec3.cross(vup, w).unit()
+        val v = Vec3.cross(w, u)
+
+        origin = lookFrom
+        horizontal = width * u
+        vertical = height * v
+        uvOrigin = origin - horizontal / 2.0 - vertical / 2.0 - w
     }
 
-    fun getRay(u: Double, v: Double): Ray {
-        return Ray(origin, uvOrigin + u * horizontal + v * vertical - origin)
+    fun getRay(s: Double, t: Double): Ray {
+        return Ray(origin, uvOrigin + s * horizontal + t * vertical - origin)
     }
 
 }

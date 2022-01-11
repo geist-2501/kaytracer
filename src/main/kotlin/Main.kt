@@ -47,7 +47,7 @@ fun main(args: Array<String>) {
 
     // Camera.
 
-    val camera = Camera()
+    val camera = Camera(Vec3(-2, 2, 1), Vec3(0, 0, -1), Vec3(0, 1, 0), 20.0, aspect)
 
     // Render.
 
