@@ -111,6 +111,14 @@ class Vec3(x: Double, y: Double, z: Double) {
             return randomInUnitSphere().unit()
         }
 
+        fun randomInUnitDisk(): Vec3 {
+            while (true) {
+                val p = Vec3(randomNum(-1.0, 1.0), randomNum(-1.0, 1.0), 0.0)
+                if (p.sqrMag() >= 1) continue
+                return p
+            }
+        }
+
         fun randomInHemisphere(normal: Vec3): Vec3 {
             val inSphere = randomInUnitSphere()
             return if (dot(inSphere, normal) > 0.0) inSphere else -inSphere
